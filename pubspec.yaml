@@ -33,7 +33,7 @@ dependencies:
   path_provider: ^1.6.27
   autocomplete_textfield: ^1.7.3
   http: ^0.12.2
-  connectivity: ^0.4.8+2
+  connectivity: ^2.0.2
 
 dev_dependencies:
   flutter_test:

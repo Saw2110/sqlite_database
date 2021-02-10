@@ -1,12 +1,10 @@
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sqlite_database/Database/CURDDatabase.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:sqlite_database/Database/CustomerInfo.dart';
-import 'package:sqlite_database/networkhelper.dart';
 
 const APIDATA =
     'https://esnep.com/easyCollectorR/api/Collector/CollectorList?CoOperativeCode=ES25';
@@ -36,21 +34,17 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  _checkInternetConnectivity() async {
-    var result = await Connectivity().checkConnectivity();
-    if (result == ConnectivityResult.none) {
-      print('no internet connection'); // showDialog(
-      //     context: context,
-      //     builder: (context) {
-      //       return AlertDialog(
-      //         title: Text('no internet connection'),
-      //       );
-      //     });
-    }
-    if (result == ConnectivityResult.mobile) {
+  checkInternetConnectivity() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      // I am connected to a mobile network.
+      getData();
       getDataFromDb();
-    }
-    if (result == ConnectivityResult.wifi) {
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      // I am connected to a wifi network.
+      getData();
+      getDataFromDb();
+    } else {
       getDataFromDb();
     }
   }
@@ -58,7 +52,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _checkInternetConnectivity();
+    checkInternetConnectivity();
     // createUserTable();
     // // checkInternetConnectivity();
     // getData();
@@ -81,12 +75,24 @@ class _MyAppState extends State<MyApp> {
           coOperativeCode: coOperativeCode,
           collectorImg: collectorImg,
           collectorID: collectorID));
-      // print(name);
-      // print(id);
-      // print(coOperativeCode);
-      // print(collectorImg);
-      // print(collectorID);
+      print(name);
+      print(id);
+      print(coOperativeCode);
+      print(collectorImg);
+      print(collectorID);
     }
+    // ListView.builder(
+    //     itemCount: info.length,
+    //     padding: const EdgeInsets.all(15.0),
+    //     itemBuilder: (context, position) {
+    //       return Column(children: <Widget>[
+    //         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+    //           Expanded(child: Text('${info[position].coOperativeCode}')),
+    //           Expanded(child: Text('${info[position].name}')),
+    //           Expanded(child: Text('${info[position].collectorImg}')),
+    //         ]),
+    //       ]);
+    //     });
   }
 
   @override
@@ -116,38 +122,41 @@ class _MyAppState extends State<MyApp> {
           }),
       // child: FutureBuilder(
       //     //fetching data from db
-      //     future: getDataFromDb(),
+      //     future: getDataFromDb.call(),
       //     builder: (context, AsyncSnapshot snapshot) {
       //       if (!snapshot.hasData) {
       //         //loading circular progress bar
       //         return Center(child: CircularProgressIndicator());
       //       } else {
       //         return Container(
-      //             child: ListView.builder(
-      //                 itemCount: snapshot.data.length,
-      //                 scrollDirection: Axis.vertical,
-      //                 itemBuilder: (BuildContext context, int index) {
-      //                   return Column(children: [
-      //                     //custom widget
-      //                     Row(
-      //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //                         children: [
-      //                           Expanded(
-      //                               child: Text(
-      //                                   '${snapshot.data[index].coOperativeCode.toString()}')),
-      //                           Expanded(
-      //                               child: Text(
-      //                                   '${snapshot.data[index].name.toString()}')),
-      //                           Expanded(
-      //                               child: Text(
-      //                                   '${snapshot.data[index].collectorImg.toString()}')),
-      //                         ]),
-      //                     // positionedBlock(context, snapshot.data[index]),
-      //                     Divider(
-      //                       thickness: 2,
-      //                     ),
-      //                   ]);
-      //                 }));
+      //           child: ListView.builder(
+      //               itemCount: {snapshot.data}.length,
+      //               // itemCount: list.length,
+      //               // itemCount: info.toString().length,
+      //               scrollDirection: Axis.vertical,
+      //               itemBuilder: (BuildContext context, int index) {
+      //                 return Column(children: [
+      //                   //custom widget
+      //                   Row(
+      //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //                       children: [
+      //                         Expanded(
+      //                             child: Text(
+      //                                 '${snapshot.data[index].coOperativeCode.toString()}')),
+      //                         Expanded(
+      //                             child: Text(
+      //                                 '${snapshot.data[index].name.toString()}')),
+      //                         Expanded(
+      //                             child: Text(
+      //                                 '${snapshot.data[index].collectorImg.toString()}')),
+      //                       ]),
+      //                   // positionedBlock(context, snapshot.data[index]),
+      //                   Divider(
+      //                     thickness: 2,
+      //                   ),
+      //                 ]);
+      //               }),
+      //         );
       //       }
       //     }),
     );

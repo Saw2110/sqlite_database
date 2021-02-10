@@ -59,17 +59,17 @@ Future<List<Map<String, dynamic>>> getCustomerMapList() async {
 //get Map list from db, convert to Costumer List object
 Future<List<CustomerInfo>> getCustomerList() async {
   //get map list and # of entries in db
-  List<Map<String, dynamic>> exerciseMapList = await getCustomerMapList();
-  List<CustomerInfo> exerciseList = List<CustomerInfo>();
-
+  List<Map<String, dynamic>> customerMapList = await getCustomerMapList();
+  // List<CustomerInfo> customerList = List<CustomerInfo>();
+  List<CustomerInfo> customerList = List<CustomerInfo>();
   //Loop to create Customer list from a map list
-  for (var entry in exerciseMapList) {
-    exerciseList.add(CustomerInfo(
+  for (var entry in customerMapList) {
+    customerList.add(CustomerInfo(
         name: entry['name'],
         id: entry['id'],
         collectorID: entry['collectorID'],
         collectorImg: entry['collectorImg'],
         coOperativeCode: entry['coOperativeCode']));
   }
-  return exerciseList;
+  return customerList;
 }
